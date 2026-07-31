@@ -4,10 +4,10 @@ After=network.target mongod.service
 
 [Service]
 Type=simple
-User=www-data
-WorkingDirectory=/opt/infra-learning/backend
-EnvironmentFile=/opt/infra-learning/configs/backend.env
-ExecStart=/opt/infra-learning/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+User=mongo-app
+WorkingDirectory=/opt/MongoDB-Infrastructure-Platform/backend
+EnvironmentFile=/optMongoDB-Infrastructure-Platform/configs/backend.env
+ExecStart=/opt/MongoDB-Infrastructure-Platform/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=3
 
