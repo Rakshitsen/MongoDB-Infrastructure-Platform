@@ -1,0 +1,16 @@
+[Unit]
+Description=MongoDB Infra Learning Platform Backend
+After=network.target mongod.service
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/infra-learning/backend
+EnvironmentFile=/opt/infra-learning/configs/backend.env
+ExecStart=/opt/infra-learning/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+
