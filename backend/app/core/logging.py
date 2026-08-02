@@ -5,10 +5,50 @@ from datetime import datetime, timezone
 from typing import Callable
 
 from fastapi import Request, Response
+from pymongo import monitoring
 
 
 logger = logging.getLogger("infra_learning")
 recent_logs: deque[dict] = deque(maxlen=200)
+
+
+class MongoCommandLogger(monitoring.CommandListener):
+    def started(self, event):
+        pass
+
+    def succeeded(self, event):
+        self._log_event(event, "SUCCESS")
+
+    def failed(self, event):
+        self._log_event(event, "FAILURE")
+
+    def _log_event(self, event, status):
+        # Determine if it's a read or write
+        read_ops = {"find", "getMore", "aggregate", "count", "distinct"}
+        write_ops = {"insert", "update", "delete", "findAndModify"}
+        
+        op_type = "UNKNOWN"
+        if event.command_name in read_ops:
+            op_type = "READ"
+        elif event.command_name in write_ops:
+            op_type = "WRITE"
+        elif event.command_name == "hello" or event.command_name == "isMaster":
+            return # Skip noise
+
+        duration_ms = round(event.duration_micros / 1000, 2)
+        
+        log_entry = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "type": "MONGODB",
+            "endpoint": event.command_name,
+            "node": f"{event.connection_id[0]}:{event.connection_id[1]}",
+            "operation": op_type,
+            "duration_ms": duration_ms,
+            "success": status == "SUCCESS",
+            "database": event.database_name,
+        }
+        recent_logs.appendleft(log_entry)
+        logger.info(f"MONGODB OP: {log_entry}")
 
 
 def configure_logging(level: str) -> None:

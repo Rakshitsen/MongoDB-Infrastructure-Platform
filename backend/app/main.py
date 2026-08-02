@@ -6,6 +6,7 @@ from app.core.settings import settings
 from app.routes.logs import router as logs_router
 from app.routes.products import router as products_router
 from app.routes.system import router as system_router
+from app.routes.replicaset import router as replicaset_router
 
 configure_logging(settings.log_level)
 
@@ -23,3 +24,4 @@ app.middleware("http")(request_logging_middleware)
 app.include_router(system_router)
 app.include_router(logs_router)
 app.include_router(products_router)
+app.include_router(replicaset_router)

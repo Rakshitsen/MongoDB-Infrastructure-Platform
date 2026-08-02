@@ -1,0 +1,46 @@
+# Python
+.Python
+__pycache__/
+*.pyc
+*.o
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node.js
+node_modules/
+dist/
+build/
+.parcel-cache/
+.vite/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.bak
+*.swo
+
+# OS generated files
+.DS_Store
+.Trash/
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Other
+coverage/
+.mypy_cache/
+htmlcov/
+.pytest_cache/
